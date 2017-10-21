@@ -4,31 +4,43 @@
 #include <iostream>
 #include <vector>
 #include <array>
-#include <chrono>
+#include <cmath>
+//#include <chrono>
 
 //constexpr double tau (0.02);
 constexpr double resistance (20);
 constexpr double capacite (1);
 constexpr double seuil (20);
+constexpr double Decalage (1.5);
+constexpr int tailleTampon(16);
+constexpr int h (1);
+const double tau (resistance * capacite);
+const double c1 (exp(-(h/10.0)/tau));
+const double c2 (1-c1);
 
 
 class Neurone {
 	public :
 		Neurone();
+		Neurone(std::vector<Neurone*> charge);
 		~Neurone();
 		double accesPotMemb();
-		std::vector<double> accesTempsPics();
+		std::vector<double> accesPasTempsPics();
 		size_t accesNbPics();
-		bool evolue(double h, double tempsGlobal, double Iext);
-		void recoit(double h, double tempsCourant, double Iext, double const& J);
+		std::vector<Neurone*> accesChargeables();
+		void modifieChargeables(std::vector<Neurone*> nouvCharg);
+		bool evolue(int h, int pasGlobal, double Iext);
+		void recoit(int h, int pasCourant, double Iext, double const& J);
+		
 	private :
 		double potMemb;
 		std::vector<double> pics;
-		std::array<double,20> tampon;
+		std::array<double,tailleTampon> tampon;
+		std::vector<Neurone*> chargeables;
 		bool refractaire;
 		//double accumulateur;
-		double tempsCourant;
-		std::vector<Neurone*> chargeables;
+		double pasCourant;
+		//std::vector<Neurone*> chargeables;
 		
 		double gestionTampon();
 };

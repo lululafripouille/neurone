@@ -1,16 +1,15 @@
 #ifndef RESEAU_HPP
 #define RESEAU_HPP
-#include "Neurone.cpp"
+#include "Neurone.hpp"
 #include <iostream>
 #include <vector>
 
-constexpr double Decalage (1);
-constexpr double TensionJ (5);
+constexpr double TensionJ (0.1);
 
 class Reseau {
 	public :
 		Reseau(std::vector<Neurone*>);
-		void evolue(double Iext, double tempsCourant, double tempsFinal, double h);
+		void evolue(double Iext, int pasCourant, int pasFinal, int h);
 	private :
 		std::vector<Neurone*> reseau;
 		bool occurPic;
