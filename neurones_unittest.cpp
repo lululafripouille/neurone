@@ -4,6 +4,8 @@
 #include "Reseau.hpp"
 #include "gtest/include/gtest/gtest.h"
 
+using namespace std;
+
 TEST (NeuronTest, MembranePotential) {
 	Neurone neurone1;
 	neurone1.evolue(1, 0, 1.0);
@@ -12,10 +14,14 @@ TEST (NeuronTest, MembranePotential) {
 
 TEST (NeuronTest, SpikeTimes) {
 	Neurone neurone2;
-	//std::vector<Neurone*> neurones = {&neurone2};
-	Reseau reseau2 ({&neurone2});
+	std::vector<Neurone*> neurones = {&neurone2};
+	Reseau reseau2 (neurones);
+	//cerr<<"built"<<endl;
 	reseau2.evolue(1.01, 0, 1000, 1);
-	EXPECT_EQ(924, neurone2.accesPasTempsPics()[0]);
+	//cerr<<"evolved"<<endl;
+	int a (neurone2.accesPasTempsPics()[0]);
+	//cerr<<"a"<<endl;
+	EXPECT_EQ(924, a);
 }
 
 int main(int argc, char **argv) {

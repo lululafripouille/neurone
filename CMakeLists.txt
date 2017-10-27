@@ -16,7 +16,7 @@ set(SOURCE_FILES
 include_directories(${gtest_SOURCE_DIR}/include${gtest_SOURCE_FILES})
 
 add_executable(neurones ${SOURCE_FILES})
-add_executable(neurones_unittest Neurone.cpp neurones_unittest.cpp)
+add_executable(neurones_unittest Neurone.cpp Reseau.cpp neurones_unittest.cpp)
 
 target_link_libraries(neurones_unittest gtest gtest_main)
 add_test(neurones_unittest neurones_unittest)

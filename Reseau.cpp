@@ -1,9 +1,43 @@
 #include <cassert>
 #include "Reseau.hpp"
 #include <cmath>
+#include <random>
+#include <array>
+/*
+Reseau::Reseau() {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::bernoulli_distribution d (0.1);
+	for (auto& ligne : relations) {
+		for (auto& carre : ligne) {
+			carre = d(gen);
+			std::cout << carre;
+		}
+	std::cout << std::endl;
+	}
+	std::arra
+	reseau = std::array<>
+	
+	
+	
+}*/
+
 
 Reseau::Reseau(std::vector<Neurone*> neurones) {
+	//std::cout << "salut";
 	reseau = neurones;
+	
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::bernoulli_distribution d (0.1);
+	for (auto& ligne : relations) {
+		for (auto& carre : ligne) {
+			carre = d(gen);
+			std::cout << carre;
+		}
+	std::cout << std::endl;
+	}
+	std::cerr << "salut";
 }
 
 void Reseau::evolue(double Iext, int pasCourant, int pasFinal, int h) {
@@ -25,12 +59,11 @@ void Reseau::evolue(double Iext, int pasCourant, int pasFinal, int h) {
 			if (occurPic) {
 				for (size_t j(0); j < reseau[i]->accesChargeables().size(); ++j) {
 					assert(reseau[i]->accesChargeables()[j] != nullptr);
-					
 					reseau[i]->accesChargeables()[j]->recoit(h, pasCourant, Iext, TensionJ);
 				}
 			}
 		}
-		
+		//std::cerr << "bien"<< std::endl;
 		/*
 		occurPic = (reseau[0])->evolue(h, tempsCourant, Iext);
 		if (occurPic) {
@@ -45,7 +78,10 @@ void Reseau::evolue(double Iext, int pasCourant, int pasFinal, int h) {
 			}
 		}*/
 		std::cout << pasCourant << "    ";
-		std::cout << reseau[0]->accesPotMemb() << "    " << reseau[1]->accesPotMemb() << std::endl;
+		for (auto neur : reseau) {
+			std::cout << neur->accesPotMemb() << "    " ; 
+		}
+		std::cout << std::endl;
 		pasCourant += h;
 	}
 }

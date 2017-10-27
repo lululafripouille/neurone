@@ -18,10 +18,11 @@ const double tau (resistance * capacite);
 const double c1 (exp(-(h/10.0)/tau));
 const double c2 (1-c1);
 
+enum Nature {Excitateur, Inhibiteur};
 
 class Neurone {
 	public :
-		Neurone();
+		Neurone(Nature n = Excitateur);
 		Neurone(std::vector<Neurone*> charge);
 		~Neurone();
 		double accesPotMemb();
@@ -41,6 +42,7 @@ class Neurone {
 		//double accumulateur;
 		double pasCourant;
 		//std::vector<Neurone*> chargeables;
+		Nature nature;
 		
 		double gestionTampon();
 };

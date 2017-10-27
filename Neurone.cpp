@@ -3,11 +3,12 @@
 #include <cassert>
 
 
-Neurone::Neurone() {
+Neurone::Neurone(Nature n) {
 	//double tau = capacite*resistance;
 	//double c1 = exp(-(h/10)/tau);
 	//double c2 = 1 - exp(-(h/10)/tau);
 	potMemb = 0.0;
+	nature = n;
 	while(!pics.empty()) {
 		pics.pop_back();
 	}

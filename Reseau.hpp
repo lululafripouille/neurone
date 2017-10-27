@@ -3,8 +3,10 @@
 #include "Neurone.hpp"
 #include <iostream>
 #include <vector>
+#include <array>
 
 constexpr double TensionJ (0.1);
+constexpr size_t tailleReseau (10);
 
 class Reseau {
 	public :
@@ -13,6 +15,7 @@ class Reseau {
 	private :
 		std::vector<Neurone*> reseau;
 		bool occurPic;
+		std::array<std::array<bool, tailleReseau>, tailleReseau> relations;
 };
 
 #endif //RESEAU_HPP
