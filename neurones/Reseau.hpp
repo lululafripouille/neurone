@@ -1,19 +1,41 @@
 #ifndef RESEAU_HPP
 #define RESEAU_HPP
-#include "Neurone.cpp"
+#include "Neurone.hpp"
 #include <iostream>
 #include <vector>
+#include <array>
+#include "constantes.hpp"
 
-constexpr double Decalage (1);
-constexpr double TensionJ (5);
+/*!
+ * @class Reseau
+ * @brief Classe s'occupant des relations entre neurones 
+ */
 
 class Reseau {
 	public :
-		Reseau(std::vector<Neurone*>);
-		void evolue(double Iext, double tempsCourant, double tempsFinal, double h);
+		//CONSTRUCTEUR, DESTRUCTEUR
+			/*!
+		 * @brief Constructeur du réseau
+		 */
+		 Reseau();
+				/*!
+		 * @brief Destructeur du réseau
+		 */
+		~Reseau();
+		//Reseau(std::array<Neurone*, tailleReseau>);
+		//METHODE PUBLIQUE
+				/*!
+		 * @brief Méthode principale de la classe, modélisant indirectement l'évolution des potentiels membranaires 
+		 * @param pasInitial, le pas de temps de départ de la simulation
+		 * @param pasFinal, le pas de temps final de la simulation
+		 * @param Iext, le courant externe
+		 */
+		void evolue(int pasInitial, double Iext);
 	private :
-		std::vector<Neurone*> reseau;
-		bool occurPic;
+		//ATTRIBUTS
+		std::array<Neurone*, tailleReseau> reseau;								///< le tableau de pointeurs sur les neurones composant le réseau
+		std::array<std::array<unsigned short int, nombreConnexions>, tailleReseau> relations;///< la matrice du nombre de connexions entre neurones
+		std::array<int, pasFinal> tableauAImprimer;
 };
 
 #endif //RESEAU_HPP
