@@ -5,29 +5,7 @@
 #include <vector>
 #include <array>
 #include <cmath>
-
-constexpr double resistance (20);				///< la resistance de la membrane
-constexpr double capacite (1);					///< la capacite de la membrane
-constexpr double seuil (20);					///< le seuil du pic
-constexpr double Decalage (1.5);				///< le décalage entre le pic et l'addition de la tension dans l'autre neurone en ms
-constexpr int tailleTampon(16);					///< la taille du tampon
-constexpr int h (1);							///< le pas de temps (correspond à 1/10 ms)
-constexpr double TensionJe (0.1);				///< la tension transmises par des neurones excitateurs
-constexpr double TensionJi (0.5);	//-0.5??	///< la tension transmises par des neurones inhibiteurs	
-constexpr int teta (20);						//??
-constexpr double e (0.1);						///< le rapport entre excitateurs et inhibiteurs
-constexpr int nombreExcitateurs (200);			///< le nombre de neurones excitateurs
-constexpr int tauRefractaire(2);				///< le temps où le neurone reste réfractaire
-
-const double tau (resistance * capacite);		//?
-const double c1 (exp(-(h/10.0)/tau));			///<une constante
-const double c2 (1-c1);							///<une constante
-const int nombreInhibiteurs (0.25 * nombreExcitateurs); ///< le nombre de neurones inhibiteurs
-const int ConnexionExcitatrices (e * nombreExcitateurs);///< le nombre de connexions excitatrices
-const int ConnexionInhibitrices (e * nombreInhibiteurs);///< le nombre de connexions inhibitrices
-const double nu_seuil (teta/(ConnexionExcitatrices * TensionJe * tau));//?
-const double nu (2*nu_seuil);					//?
-const int tailleReseau (nombreExcitateurs + nombreInhibiteurs);///< la taille du réseau, en nombre de neurones
+#include "constantes.hpp"
 
 enum Nature {Excitateur, Inhibiteur};			///< nature, excitateur ou inhibiteur
 
@@ -38,7 +16,7 @@ enum Nature {Excitateur, Inhibiteur};			///< nature, excitateur ou inhibiteur
 
 class Neurone {
 	public :
-		//CONSTRUCTEURS, DESTRUCTEUR
+		//CONSTRUCTEURS, DESTRUCTEUR____________________________________
 				/*!
 		 * @brief Constructeur du neurone
 		 * @param Nature du neurone
@@ -79,6 +57,7 @@ class Neurone {
 		 * @return La nature du neurone
 		 */
 		Nature accesNature();
+		
 		//MANIPULATEUR
 				/*!
 		 * @brief manipulateurs modifiant les neurones auxquels l'instance courante peut transmettre de la tension
@@ -90,9 +69,10 @@ class Neurone {
 		 * @brief fonction principale de la modélisation du neurone, faisant évoluer son potentiel membranaire
 		 * @param pasGlobal, le pas de temps global
 		 * @param Iext, le courant externe
+		 * @param poisson, la présence de pics provenant du reste du cerveau, générés par Poisson
 		 * @return La présence d'un pic
 		 */
-		bool evolue(int pasGlobal, double Iext);
+		bool evolue(int pasGlobal, double Iext, bool poisson);
 				/*!
 		 * @brief entree d'une tension dans le tampon du neurone
 		 * @param J, la tension soit Je, soit Ji
@@ -100,7 +80,7 @@ class Neurone {
 		void recoit(double const& J);
 		
 	private :
-		//ATTRIBUTS
+		//ATTRIBUTS_____________________________________________________
 		double potMemb;								///< le potentiel membranaire
 		std::vector<double> pics;					///< le tableau qui enregistre les pas de temps des occurences de décharges
 		std::array<double,tailleTampon> tampon;		///< le tampon, utile pour modéliser le décalage entre décharge et impact
@@ -109,7 +89,7 @@ class Neurone {
 		int horlogeRefractaire;						///< les pas de temps qu'il reste avant la fin de l'état réfractaire du neurone
 		Nature nature;								///< la nature, excitateur ou inhibiteur d'un neurone
 		
-		//METHODES PRIVEES
+		//METHODES PRIVEES______________________________________________
 		
 				/*!
 		 * @brief Gestion du déplacement des tensions dans le tampon

@@ -7,7 +7,8 @@
 int main () {
 	double Iext (0);
 	int pasCourant (0);
-	int pasFinal (0);
+	bool poisson (true);
+	//int pasFinal (0);
 	/*
 	Neurone neur1;
 	Neurone neur2;
@@ -16,15 +17,15 @@ int main () {
 	neur1.modifieChargeables({&neur2});*/
 	
 	//std::cout << neur1.accesPotMemb();
-	std::cout << "Entrez le temps final !" << std::endl;
+	/*std::cout << "Entrez le temps final !" << std::endl;
 	double v (0);
 	std::cin >> v;
-	pasFinal = v * 10000;
+	pasFinal = v * 10000;*/
 	/*std::cout << "Entrez le courant externe !" << std::endl;
 	std::cin >> Iext;
 	*/
 	Reseau res;
-	res.evolue(pasCourant, pasFinal, Iext);
+	res.evolue(pasCourant, Iext, poisson);
 	/*for (auto neur : neurones) {
 		for (auto pic : neur->accesPasTempsPics()){
 			std::cout << pic << std::endl;

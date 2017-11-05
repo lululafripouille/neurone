@@ -5,7 +5,7 @@
 //constexpr double h (1);
 
 int main () {
-	double Iext (0);
+	/*double Iext (0);
 	int pasCourant (0);
 	int pasFinal (0);
 	
@@ -29,6 +29,6 @@ int main () {
 			std::cout << pic << std::endl;
 		}
 		std::cout << std::endl;
-	}
+	}*/
 	return 0;
 }

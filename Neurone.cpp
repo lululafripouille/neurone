@@ -39,11 +39,13 @@ Nature Neurone::accesNature() {
 	return nature;
 }
 
+	
 void Neurone::modifieChargeables(std::vector<Neurone*> nouvCharg){		//manipulateur
 	chargeables = nouvCharg;
 }
 
-bool Neurone::evolue(int pasGlobal, double Iext) {
+
+bool Neurone::evolue(int pasGlobal, double Iext, bool poisson) {
 	if (refractaire){													//cas où il est réfractaire
 		gestionRefractaire();
 	}
@@ -53,11 +55,17 @@ bool Neurone::evolue(int pasGlobal, double Iext) {
 	double J (gestionTampon());
 	
 	if (tau > 0. and !refractaire) {
-		std::random_device rd;											//génération de la variable aléatoire									
-		std::mt19937 gen(rd());
-		std::poisson_distribution<> d(nu * nombreExcitateurs * h * TensionJe);
-		
-		potMemb = potMemb * c1 + Iext * resistance * c2 + J + d(gen);	//equation principale décrivant l'évolution du potentiel membranaire
+		if (poisson) {
+			std::random_device rd;										//génération de la variable aléatoire									
+			std::mt19937 gen(rd());
+			std::poisson_distribution<> d(nuExtParPas);
+		//std::cerr << nu * nombreExcitateurs * h/10. * TensionJe << "     ";
+			potMemb = potMemb * c1 + Iext * resistance * c2 + J + d(gen)*TensionJe;	//equation principale décrivant l'évolution du potentiel membranaire
+		//std::cerr << d(gen) << " ";
+		//std::cerr << J << "   " << std::endl;
+		} else {
+			potMemb = potMemb * c1 + Iext * resistance * c2 + J;		//
+		}
 	}
 	if (potMemb >= seuil) {
 		return true;
