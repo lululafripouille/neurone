@@ -3,23 +3,32 @@
 #include <cassert>
 #include <random>
 
-
+//CONSTRUCTEURS, DESTRUCTEUR____________________________________________
 Neurone::Neurone(Nature n)
-	: potMemb (0.0), horlogeRefractaire(tauRefractaire), nature(n) {	//initialisations
+	: potMemb (0.0), horlogeRefractaire(tauRefractaire), nature(n), refractaire (false) {	//initialisations
 	
 	while(!pics.empty()) {
 		pics.pop_back();
 	}
-	refractaire = false;
+	for (auto carre : tampon) {
+		carre = 0.0;
+	}
 }
 
-Neurone::Neurone(std::vector<Neurone*> charge) {						//conception où il faudrait passer en paramètre les neurones auxquels l'instance courante pourrait passer son pic
-	Neurone();
+Neurone::Neurone(std::vector<Neurone*> charge, Nature n)				//conception où il faudrait passer en paramètre les neurones auxquels l'instance courante pourrait passer son pic
+	: potMemb (0.0), horlogeRefractaire(tauRefractaire), nature(n), refractaire (false) {	//initialisations
+	
+	while(!pics.empty()) {
+		pics.pop_back();
+	}
+	for (auto carre : tampon) {
+		carre = 0.0;
+	}
 	chargeables = charge;
 }
 
-
-size_t Neurone::accesNbPics() {											//accesseurs
+//ACCESSEURS____________________________________________________________
+size_t Neurone::accesNbPics() {											
 	return pics.size();
 }
 
@@ -39,11 +48,15 @@ Nature Neurone::accesNature() {
 	return nature;
 }
 
-void Neurone::modifieChargeables(std::vector<Neurone*> nouvCharg){		//manipulateur
+//MANIPULATEUR__________________________________________________________
+	
+void Neurone::modifieChargeables(std::vector<Neurone*> nouvCharg){		
 	chargeables = nouvCharg;
 }
 
-bool Neurone::evolue(int pasGlobal, double Iext) {
+//AUTRES METHODES PUBLIQUES_____________________________________________
+
+bool Neurone::evolue(int pasGlobal, double Iext, bool poisson) {
 	if (refractaire){													//cas où il est réfractaire
 		gestionRefractaire();
 	}
@@ -52,14 +65,18 @@ bool Neurone::evolue(int pasGlobal, double Iext) {
 	}
 	double J (gestionTampon());
 	
-	if (tau > 0. and !refractaire) {
-		std::random_device rd;											//génération de la variable aléatoire									
-		std::mt19937 gen(rd());
-		std::poisson_distribution<> d(nu * nombreExcitateurs * h/10. * TensionJe);
+	if (!refractaire) {
+		if (poisson) {
+			static std::random_device rd;								//génération de la variable aléatoire									
+			static std::mt19937 gen(rd());
+			static std::poisson_distribution<> d(nuExtParPas);
 		//std::cerr << nu * nombreExcitateurs * h/10. * TensionJe << "     ";
-		potMemb = potMemb * c1 + Iext * resistance * c2 + J + d(gen)*TensionJe;	//equation principale décrivant l'évolution du potentiel membranaire
-		std::cerr << d(gen) << " ";
+			potMemb = potMemb * c1 + Iext * resistance * c2 + J + d(gen)*TensionJe;	//equation principale décrivant l'évolution du potentiel membranaire
+		//std::cerr << d(gen) << " ";
 		//std::cerr << J << "   " << std::endl;
+		} else {
+			potMemb = potMemb * c1 + Iext * resistance * c2 + J;		
+		}
 	}
 	if (potMemb >= seuil) {
 		return true;
@@ -67,6 +84,11 @@ bool Neurone::evolue(int pasGlobal, double Iext) {
 	return false;
 }
 
+void Neurone::recoit(double const& J) {
+	tampon[tampon.size()-1] += J;
+}
+
+//METHODES PRIVEES______________________________________________________
 
 void Neurone::gestionRefractaire() {
 	potMemb = 0;
@@ -83,7 +105,6 @@ void Neurone::gestionPic(int pasGlobal) {
 	potMemb = 0;
 }
 
-
 double Neurone::gestionTampon() {
 	assert(tampon.size() > 0);											//inutile pour l'instant car il s'agit d'un array et non d'un vector, mais lors d'un changement de conception il pourrait s'avérer utile
 	double J (tampon[0]);
@@ -91,11 +112,5 @@ double Neurone::gestionTampon() {
 		tampon[i-1] = tampon[i];
 	}
 	tampon[tampon.size()-1] = 0;
-	//std::cout << tampon[tampon.size()+1] << std::endl;				//affiche le temps, pas SegFault ??
 	return J;
-}
-		
-
-void Neurone::recoit(double const& J) {
-	tampon[tampon.size()-1] += J;
 }

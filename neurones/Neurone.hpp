@@ -16,7 +16,7 @@ enum Nature {Excitateur, Inhibiteur};			///< nature, excitateur ou inhibiteur
 
 class Neurone {
 	public :
-		//CONSTRUCTEURS, DESTRUCTEUR
+		//CONSTRUCTEURS, DESTRUCTEUR____________________________________
 				/*!
 		 * @brief Constructeur du neurone
 		 * @param Nature du neurone
@@ -26,7 +26,7 @@ class Neurone {
 		 * @brief Constructeur du neurone si la conception était autre
 		 * @param Liste de neurones que l'instance courante peut charger
 		 */
-		Neurone(std::vector<Neurone*> charge);
+		Neurone(std::vector<Neurone*> charge, Nature n = Excitateur);
 				/*!
 		 * @brief Destructeur du neurone
 		 */
@@ -35,7 +35,7 @@ class Neurone {
 		 * @brief Accès au potentiel membranaire
 		 * @return Le potentiel membranaire
 		 */
-		//ACCESSEURS
+		//ACCESSEURS____________________________________________________
 		double accesPotMemb();
 				/*!
 		 * @brief Accès aux pas de temps auxquels les pics surviennent
@@ -48,7 +48,7 @@ class Neurone {
 		 */
 		size_t accesNbPics();
 				/*!
-		 * @brief Accès aux neurones auxquels l'instance courante peut transmettre de la tension, méthode non utilisée dans cette conception
+		 * @brief Accès aux neurones auxquels l'instance courante peut transmettre de la tension, METHODE NON UTILISEE DANS CETTE CONCEPTION
 		 * @return Les neurones auxquels l'instance courante peut transmettre de la tension
 		 */
 		std::vector<Neurone*> accesChargeables();
@@ -57,20 +57,22 @@ class Neurone {
 		 * @return La nature du neurone
 		 */
 		Nature accesNature();
-		//MANIPULATEUR
+		
+		//MANIPULATEUR__________________________________________________
 				/*!
-		 * @brief manipulateurs modifiant les neurones auxquels l'instance courante peut transmettre de la tension
+		 * @brief manipulateurs modifiant les neurones auxquels l'instance courante peut transmettre de la tension, METHODE NON UTILISEE DANS CETTE CONCEPTION
 		 * @param Les neurones auxquels l'instance courante peut transmettre de la tension
 		 */
 		void modifieChargeables(std::vector<Neurone*> nouvCharg);
-		//METHODES PUBLIQUES
+		//AUTRES METHODES PUBLIQUES_____________________________________
 				/*!
 		 * @brief fonction principale de la modélisation du neurone, faisant évoluer son potentiel membranaire
 		 * @param pasGlobal, le pas de temps global
 		 * @param Iext, le courant externe
+		 * @param poisson, la présence de pics provenant du reste du cerveau, générés par Poisson
 		 * @return La présence d'un pic
 		 */
-		bool evolue(int pasGlobal, double Iext);
+		bool evolue(int pasGlobal, double Iext, bool poisson);
 				/*!
 		 * @brief entree d'une tension dans le tampon du neurone
 		 * @param J, la tension soit Je, soit Ji
@@ -78,7 +80,7 @@ class Neurone {
 		void recoit(double const& J);
 		
 	private :
-		//ATTRIBUTS
+		//ATTRIBUTS_____________________________________________________
 		double potMemb;								///< le potentiel membranaire
 		std::vector<double> pics;					///< le tableau qui enregistre les pas de temps des occurences de décharges
 		std::array<double,tailleTampon> tampon;		///< le tampon, utile pour modéliser le décalage entre décharge et impact
@@ -87,7 +89,7 @@ class Neurone {
 		int horlogeRefractaire;						///< les pas de temps qu'il reste avant la fin de l'état réfractaire du neurone
 		Nature nature;								///< la nature, excitateur ou inhibiteur d'un neurone
 		
-		//METHODES PRIVEES
+		//METHODES PRIVEES______________________________________________
 		
 				/*!
 		 * @brief Gestion du déplacement des tensions dans le tampon
@@ -103,10 +105,6 @@ class Neurone {
 		 * @brief gestion de l'horloge correspondant au temps réfractaire et du potentiel
 		 */
 		void gestionRefractaire();
-		//double accumulateur;
-		//int pasCourant
-		//std::vector<Neurone*> chargeables;
-		
 };
 
 #endif //NEURONE_HPP
